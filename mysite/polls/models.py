@@ -1,3 +1,5 @@
+from datetime import timezone
+import datetime
 from django.db import models
 
 # Create your models here.
@@ -12,6 +14,7 @@ class Question(models.Model):
     def was_published_recently(self):
         return self.pub_date >= timezone.now()-datetime.timedelta(days=1)
 
+
 class Choice(models.Model):
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
     choice_text = models.CharField(max_length = 200)
@@ -20,42 +23,56 @@ class Choice(models.Model):
     def __str__(self):
         return self.choice_text
     
+
 class Endereco(models.Model):
     cep = models.CharField(max_length=8)
     rua = models.CharField(max_length=30)
     numero = models.IntegerField()
     bairro = models.CharField(max_length=30)
 
+
 class Cliente(models.Model):
     nome = models.CharField(max_length=30)
     cpf = models.CharField(max_length=11)
     telefone = models.CharField(max_length=13)
-    email = models.CharField(max_length=45)
+    email = models.EmailField(max_length=45)
     endereco = models.ManyToManyField(Endereco)
+
+    def __str__(self):
+        return self.nome
 
 class ItemDoMenu(models.Model):
     nome = models.CharField(max_length=30)
     descricao = models.CharField(max_length=100)
     preco = models.FloatField()
+    
+    def __str__(self):
+        return self.nome
+
 
 class Pizza(ItemDoMenu):
     tamanho = models.IntegerField()
     bordaRecheada = models.BooleanField()
 
+
 class Bebida(ItemDoMenu):
     tamanho = models.IntegerField()
+
+class ItemPedido(models.Model):
+    itemDoMenu = models.ForeignKey(ItemDoMenu, on_delete=models.CASCADE)
+    desconto = models.FloatField()
+    quantidade = models.IntegerField()
+
 
 class Cardapio(models.Model):
     ItemsDoMenu = models.ManyToManyField(ItemDoMenu)
     ativo = models.BinaryField()
 
+
 class Carrinho(models.Model):
     cliente = models.ForeignKey(Cliente, on_delete=models.CASCADE)
-    itensDoMenu = models.ManyToManyField(ItemDoMenu)
+    itensDoMenu = models.ManyToManyField(ItemPedido)
 
-class ItemPedido(models.Model):
-    itemDoMenu = models.ManyToManyField(ItemDoMenu)
-    desconto = models.FloatField()
 
 class Pedido(models.Model):
     cliente = models.ManyToManyField(Cliente)
@@ -68,13 +85,11 @@ class Pedido(models.Model):
     )
     status = models.CharField(max_length=20, choices=STATUS_CHOICES)
 
+
 class Restaurante(models.Model):
     cardapio = models.ManyToManyField(Cardapio)
     carrinho = models.ManyToManyField(Carrinho)
-    
 
-##dsdalç
-    
 
 
 

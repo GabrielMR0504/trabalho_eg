@@ -2,7 +2,7 @@ from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse, HttpResponseRedirect
 from django.urls import reverse
 
-from .models import Question
+from .models import *
 
 # Create your views here.
 
@@ -28,3 +28,12 @@ def vote( request, question_id):
         selected_choice.votes += 1
         selected_choice.save()
         return HttpResponseRedirect(reverse('polls:results', args=(question.id,)))
+    
+def cardapio(request):
+
+    items_do_menu = ItemDoMenu.objects.all()  
+
+
+    print(items_do_menu)
+    
+    return render(request, 'polls/cardapio.html', {'items_do_menu': items_do_menu})
