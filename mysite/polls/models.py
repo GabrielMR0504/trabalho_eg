@@ -58,6 +58,7 @@ class Pizza(ItemDoMenu):
 class Bebida(ItemDoMenu):
     tamanho = models.IntegerField()
 
+
 class ItemPedido(models.Model):
     itemDoMenu = models.ForeignKey(ItemDoMenu, on_delete=models.CASCADE)
     desconto = models.FloatField()

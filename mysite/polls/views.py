@@ -37,3 +37,4 @@ def cardapio(request):
     print(items_do_menu)
     
     return render(request, 'polls/cardapio.html', {'items_do_menu': items_do_menu})
+
